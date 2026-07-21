@@ -1,0 +1,6 @@
+{
+  "name": "Undangan Pernikahan Digital",
+  "description": "Undangan Pernikahan Digital Afrizal & Maida Ulfa dengan tema kopi Gayo Zenith dan buku tamu digital real-time.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
