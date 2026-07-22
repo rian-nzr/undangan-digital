@@ -102,7 +102,7 @@ export default function App() {
             
             {/* Scattered coffee beans (delicate outline sketches) */}
             <div className="absolute top-1/4 right-16 opacity-15">
-              <CoffeeBean size={26} rotate={15} />
+              <CoffeeBean size={26} rotate={15} />aaa
             </div>
             <div className="absolute bottom-1/4 left-16 opacity-15">
               <CoffeeBean size={30} rotate={110} />
@@ -313,7 +313,7 @@ export default function App() {
                 {/* Visual Portrait frame representing minimal editorial layout */}
                 <div className="w-44 h-56 bg-[#F4F2EB] border border-editorial-charcoal/10 flex items-center justify-center mb-6 relative overflow-hidden shadow-xs">
                   <img 
-                    src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=400&h=533" 
+                    src="/1.jpg" 
                     alt="Afrizal" 
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     referrerPolicy="no-referrer"
@@ -350,7 +350,7 @@ export default function App() {
                 {/* Visual Portrait frame */}
                 <div className="w-44 h-56 bg-[#F4F2EB] border border-editorial-charcoal/10 flex items-center justify-center mb-6 relative overflow-hidden shadow-xs">
                   <img 
-                    src="https://images.unsplash.com/photo-1549417229-aa67d3263c09?auto=format&fit=crop&q=80&w=400&h=533" 
+                    src="2.jpg" 
                     alt="Maida Ulfa" 
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     referrerPolicy="no-referrer"
@@ -366,8 +366,8 @@ export default function App() {
                   
                   <div className="border-t border-editorial-charcoal/10 pt-4 mt-4">
                     <p className="text-[10px] uppercase tracking-wider text-editorial-accent">Putri tercinta dari keluarga:</p>
-                    <p className="font-serif text-base font-medium text-editorial-charcoal mt-1.5">Seluruh Keluarga Besar</p>
-                    <p className="text-[10px] text-editorial-accent italic mt-0.5">(Kec. Gandapura, Bireuen)</p>
+                    <p className="font-serif text-base font-medium text-editorial-charcoal mt-1.5">Alm.M YUSUF </p>
+                    <p className="font-serif text-sm text-editorial-accent">dan Ibu Rukiah</p>
                   </div>
                 </div>
               </motion.div>
@@ -486,7 +486,6 @@ export default function App() {
           {/* Section 4: Map & Route Navigation */}
           <section id="lokasi-section" className="w-full px-6 py-24 bg-[#FAF9F6] relative overflow-hidden flex flex-col items-center border-b border-editorial-charcoal/10">
             
-            <CoffeeBranch className="absolute top-10 -right-10 w-44 h-44 -rotate-90 opacity-20" />
             
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -514,7 +513,7 @@ export default function App() {
               <div className="rounded-none overflow-hidden h-[320px] md:h-[400px] w-full relative bg-editorial-ivory border border-editorial-charcoal/5">
                 <iframe
                   id="google-maps-iframe"
-                  src="https://maps.google.com/maps?q=Desa%20Lingka%20Kuta,%20Gandapura,%20Bireuen&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                  src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3973.136733816317!2d96.89065687498285!3d5.24120539473669!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zNcKwMTQnMjguMyJOIDk2wrA1MyczNS42IkU!5e0!3m2!1sid!2sid!4v1784643497506!5m2!1sid!2sid"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -530,23 +529,13 @@ export default function App() {
             <div className="flex flex-wrap gap-4 justify-center mt-8">
               <a
                 id="google-maps-app-link"
-                href="https://www.google.com/maps/search/?api=1&query=Desa+Lingka+Kuta+Gandapura+Bireuen"
+                href="https://maps.app.goo.gl/6ybnhqRyhM3Mthot9"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 bg-editorial-charcoal hover:bg-editorial-accent text-white font-medium text-xs py-4 px-8 tracking-[0.15em] uppercase border border-editorial-charcoal rounded-none transition-all duration-300 cursor-pointer hover:shadow-lg"
               >
                 <Compass className="w-4 h-4 stroke-[1.5]" />
                 Navigasi Google Maps
-              </a>
-              <a
-                id="waze-app-link"
-                href="https://waze.com/ul?q=Desa%20Lingka%20Kuta,%20Gandapura,%20Bireuen"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-white hover:bg-[#F4F2EB] text-editorial-charcoal border border-editorial-charcoal/20 font-medium text-xs py-4 px-8 tracking-[0.15em] uppercase rounded-none transition-all duration-300 cursor-pointer"
-              >
-                <MapPin className="w-4 h-4 text-editorial-accent stroke-[1.5]" />
-                Buka dengan Waze
               </a>
             </div>
           </section>
@@ -575,41 +564,8 @@ export default function App() {
             </motion.div>
 
             {/* Bank Transfer Cards Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-2xl px-2">
+            <div className="gap-6 w-full max-w-2xl px-2">
               
-              {/* Card 1: Bank Aceh (Local Aceh Bank) */}
-              <motion.div
-                id="gift-bank-aceh"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="bg-white border border-editorial-charcoal/10 rounded-none p-6 relative overflow-hidden shadow-xs"
-              >
-                {/* Visual badge */}
-                <div className="flex justify-between items-start mb-6">
-                  <div className="text-emerald-700 font-bold text-[9px] uppercase tracking-[0.2em] border border-emerald-700/20 px-3 py-1 bg-emerald-50 rounded-none">
-                    BANK ACEH
-                  </div>
-                  <Gift className="w-4 h-4 text-editorial-accent stroke-[1.5]" />
-                </div>
-
-                <div className="space-y-2">
-                  <p className="text-[9px] uppercase tracking-[0.2em] text-editorial-accent font-semibold">Nomor Rekening</p>
-                  <div className="flex items-center gap-3">
-                    <span className="font-mono text-base font-light text-editorial-charcoal tracking-wide">010.02.40.123456-7</span>
-                    <button
-                      id="copy-bank-aceh-button"
-                      onClick={() => copyToClipboard("01002401234567", "BankAceh")}
-                      className="p-1.5 text-editorial-accent hover:text-editorial-charcoal bg-[#F4F2EB] hover:bg-[#EAE7DC] border border-editorial-charcoal/10 rounded-none cursor-pointer transition-colors"
-                      title="Salin No Rekening"
-                    >
-                      {copiedBankAceh ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                    </button>
-                  </div>
-                  <p className="text-xs text-editorial-accent">Atas Nama: <b className="font-serif font-medium text-editorial-charcoal">Afrizal</b></p>
-                </div>
-              </motion.div>
 
               {/* Card 2: BSI (Bank Syariah Indonesia) */}
               <motion.div
@@ -631,17 +587,17 @@ export default function App() {
                 <div className="space-y-2">
                   <p className="text-[9px] uppercase tracking-[0.2em] text-editorial-accent font-semibold">Nomor Rekening</p>
                   <div className="flex items-center gap-3">
-                    <span className="font-mono text-base font-light text-editorial-charcoal tracking-wide">719.123.4567</span>
+                    <span className="font-mono text-base font-light text-editorial-charcoal tracking-wide">724.285.3948 </span>
                     <button
                       id="copy-bsi-button"
-                      onClick={() => copyToClipboard("7191234567", "BSI")}
+                      onClick={() => copyToClipboard("7242853948 ", "BSI")}
                       className="p-1.5 text-editorial-accent hover:text-editorial-charcoal bg-[#F4F2EB] hover:bg-[#EAE7DC] border border-editorial-charcoal/10 rounded-none cursor-pointer transition-colors"
                       title="Salin No Rekening"
                     >
                       {copiedBSI ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                     </button>
                   </div>
-                  <p className="text-xs text-editorial-accent">Atas Nama: <b className="font-serif font-medium text-editorial-charcoal">Maida Ulfa</b></p>
+                  <p className="text-xs text-editorial-accent">Atas Nama: <b className="font-serif font-medium text-editorial-charcoal text-lg">An Afrizal</b></p>
                 </div>
               </motion.div>
 
