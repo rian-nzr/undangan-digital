@@ -4,11 +4,14 @@ import { Music, Play, Pause, Volume2, VolumeX } from "lucide-react";
 interface AudioPlayerProps {
   isPlaying: boolean;
   setIsPlaying: (playing: boolean) => void;
+  audioRef?: React.MutableRefObject<HTMLAudioElement | null>;
+  isVisible?: boolean;
 }
 
-export const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, setIsPlaying }) => {
-  const audioUrl = "https://assets.mixkit.co/music/preview/mixkit-beautiful-dream-200.mp3";
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+export const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, setIsPlaying, audioRef: externalAudioRef, isVisible = true }) => {
+  const audioUrl = "/musik.mp3";
+  const internalAudioRef = useRef<HTMLAudioElement | null>(null);
+  const audioRef = externalAudioRef || internalAudioRef;
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(0.5);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
@@ -20,7 +23,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, setIsPlayin
     audioRef.current = audio;
 
     return () => {
-      if (audioRef.current) {
+      if (audioRef.current === audio) {
         audioRef.current.pause();
         audioRef.current = null;
       }
@@ -54,6 +57,10 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({ isPlaying, setIsPlayin
   const toggleMute = () => {
     setIsMuted(!isMuted);
   };
+
+  if (!isVisible) {
+    return null;
+  }
 
   return (
     <div

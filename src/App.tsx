@@ -25,6 +25,7 @@ export default function App() {
   const [isCoverOpen, setIsCoverOpen] = useState(false);
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [guestName, setGuestName] = useState("Tamu Undangan");
+  const invitationAudioRef = useRef<HTMLAudioElement | null>(null);
   
   // Clipboard copy feedback states
   const [copiedBSI, setCopiedBSI] = useState(false);
@@ -43,6 +44,9 @@ export default function App() {
   const handleOpenInvitation = () => {
     setIsCoverOpen(true);
     setIsPlayingMusic(true);
+    invitationAudioRef.current?.play().catch(() => {
+      setIsPlayingMusic(false);
+    });
     
     // Smooth scroll down slightly to main screen
     setTimeout(() => {
@@ -68,9 +72,12 @@ export default function App() {
     <div id="digital-invitation-root" className="min-h-screen bg-editorial-ivory flex flex-col items-center select-none text-editorial-charcoal overflow-x-hidden antialiased">
       
       {/* Floating Audio Widget */}
-      {isCoverOpen && (
-        <AudioPlayer isPlaying={isPlayingMusic} setIsPlaying={setIsPlayingMusic} />
-      )}
+      <AudioPlayer
+        isPlaying={isPlayingMusic}
+        setIsPlaying={setIsPlayingMusic}
+        audioRef={invitationAudioRef}
+        isVisible={isCoverOpen}
+      />
 
       <AnimatePresence mode="wait">
         {/* FULL SCREEN ENTRANCE COVER (STOPS SCROLLING) */}
