@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { MessageSquare, Users, Check, X, HelpCircle, Settings, Download, Trash2, ArrowRight, ExternalLink, Copy } from "lucide-react";
-import { GuestbookEntry, AdminSettings } from "../types";
+import { GuestbookEntry } from "../types";
 
 export const Guestbook: React.FC = () => {
   const [entries, setEntries] = useState<GuestbookEntry[]>([]);
@@ -19,7 +19,6 @@ export const Guestbook: React.FC = () => {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [adminError, setAdminError] = useState("");
   const [adminSuccess, setAdminSuccess] = useState("");
-  const [googleSheetsUrl, setGoogleSheetsUrl] = useState("");
   const [copiedScript, setCopiedScript] = useState(false);
 
   // Stats
@@ -44,24 +43,9 @@ export const Guestbook: React.FC = () => {
     }
   };
 
-  const fetchSettings = async () => {
-    try {
-      const response = await fetch("/api/admin/settings");
-      if (response.ok) {
-        const data: AdminSettings = await response.json();
-        setGoogleSheetsUrl(data.googleSheetsUrl);
-      }
-    } catch (err) {
-      console.error("Gagal memuat pengaturan:", err);
-    }
-  };
-
-  // Poll entries every 5 seconds for real-time experience
+  // Load once on page open. New entries are added to state immediately after submission.
   useEffect(() => {
     fetchEntries();
-    fetchSettings();
-    const interval = setInterval(fetchEntries, 5000);
-    return () => clearInterval(interval);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -319,7 +303,7 @@ function doGet(e) {
               Aliran Ucapan ({entries.length})
             </span>
             <span className="text-[9px] uppercase tracking-wider bg-editorial-ivory text-editorial-charcoal border border-editorial-charcoal/10 px-2.5 py-0.5 font-medium animate-pulse">
-              Real-time
+              Dimuat saat halaman dibuka
             </span>
           </div>
 
@@ -433,8 +417,7 @@ function doGet(e) {
                     id="sheets-url-input"
                     type="url"
                     placeholder="Atur GOOGLE_SHEETS_WEBHOOK_URL di Vercel" disabled
-                    value={googleSheetsUrl}
-                    onChange={(e) => setGoogleSheetsUrl(e.target.value)}
+                    value=""
                     className="w-full bg-black/30 border border-white/10 rounded-none px-3 py-2 text-xs text-white placeholder:text-gray-600 outline-none focus:border-editorial-accent"
                   />
                   <p className="text-[10px] text-gray-400 leading-relaxed">
