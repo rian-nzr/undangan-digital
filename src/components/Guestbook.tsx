@@ -114,28 +114,9 @@ export const Guestbook: React.FC = () => {
     }
   };
 
-  const handleSaveSettings = async () => {
-    setAdminError("");
+  const handleSaveSettings = () => {
     setAdminSuccess("");
-    try {
-      const response = await fetch("/api/admin/settings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          googleSheetsUrl,
-          passcode: adminPasscode,
-        }),
-      });
-
-      if (response.ok) {
-        setAdminSuccess("Pengaturan Google Sheets berhasil disimpan!");
-      } else {
-        const errData = await response.json();
-        setAdminError(errData.error || "Gagal menyimpan pengaturan.");
-      }
-    } catch (err) {
-      setAdminError("Gagal menyimpan pengaturan.");
-    }
+    setAdminError("Pada Vercel, URL webhook harus diatur melalui Environment Variables, bukan dari halaman undangan.");
   };
 
   const handleClearGuestbook = async () => {
@@ -163,23 +144,52 @@ export const Guestbook: React.FC = () => {
     }
   };
 
-  const appsScriptCode = `function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = JSON.parse(e.postData.contents);
-  
-  // Format tanggal lokalisasi WIB/WITA/WIT
-  var date = new Date(data.timestamp);
-  
-  sheet.appendRow([
-    date,
-    data.name,
-    data.status,
-    data.message
-  ]);
-  
-  return ContentService.createTextOutput(
-    JSON.stringify({ status: "success", received: data.name })
-  ).setMimeType(ContentService.MimeType.JSON);
+  const appsScriptCode = `const SHEET_NAME = "Ucapan";
+const WEBHOOK_TOKEN = "ISI_TOKEN_SAMA_DENGAN_VERCEL";
+
+function getSheet() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.insertSheet(SHEET_NAME);
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(["Tanggal", "Nama", "Kehadiran", "Ucapan"]);
+  }
+  return sheet;
+}
+
+function response(data) {
+  return ContentService.createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function authorized(e) {
+  return !WEBHOOK_TOKEN || (e.parameter && e.parameter.token === WEBHOOK_TOKEN);
+}
+
+function doPost(e) {
+  if (!authorized(e)) return response({ success: false, error: "Tidak diizinkan" });
+
+  const data = JSON.parse(e.postData.contents);
+  getSheet().appendRow([new Date(data.timestamp), data.name, data.status, data.message]);
+  return response({ success: true });
+}
+
+function doGet(e) {
+  if (!authorized(e)) return response({ success: false, error: "Tidak diizinkan" });
+  if (e.parameter.action !== "entries") return response({ success: true });
+
+  const rows = getSheet().getDataRange().getValues().slice(1).reverse();
+  const entries = rows.map(function(row) {
+    const date = new Date(row[0]);
+    return {
+      id: String(date.getTime()) + "-" + row[1],
+      timestamp: date.toISOString(),
+      name: row[1],
+      status: row[2],
+      message: row[3]
+    };
+  });
+
+  return response(entries);
 }`;
 
   const copyToClipboard = () => {
@@ -417,18 +427,18 @@ export const Guestbook: React.FC = () => {
                 {/* Save Sheet Webhook URL */}
                 <div className="space-y-2">
                   <label htmlFor="sheets-url-input" className="block text-xs font-semibold text-gray-300 uppercase tracking-wider">
-                    Google Apps Script Web Webhook URL
+                    Status Google Sheets di Vercel
                   </label>
                   <input
                     id="sheets-url-input"
                     type="url"
-                    placeholder="https://script.google.com/macros/s/.../exec"
+                    placeholder="Atur GOOGLE_SHEETS_WEBHOOK_URL di Vercel" disabled
                     value={googleSheetsUrl}
                     onChange={(e) => setGoogleSheetsUrl(e.target.value)}
                     className="w-full bg-black/30 border border-white/10 rounded-none px-3 py-2 text-xs text-white placeholder:text-gray-600 outline-none focus:border-editorial-accent"
                   />
                   <p className="text-[10px] text-gray-400 leading-relaxed">
-                    Masukkan URL hasil Deployment Web App Google Apps Script dari file Google Sheets Anda. Backend Express akan memposting setiap kiriman baru ke URL tersebut secara asinkron.
+                    Masukkan URL Web App Google Apps Script sebagai Environment Variable GOOGLE_SHEETS_WEBHOOK_URL di Vercel. Serverless Function akan meneruskan setiap ucapan ke URL tersebut.
                   </p>
                 </div>
 
@@ -439,7 +449,7 @@ export const Guestbook: React.FC = () => {
                     onClick={handleSaveSettings}
                     className="bg-editorial-ivory hover:bg-gray-200 text-editorial-charcoal font-semibold py-2 px-4 text-xs transition-colors cursor-pointer rounded-none"
                   >
-                    Simpan Webhook
+                    Info Konfigurasi Vercel
                   </button>
                   <a
                     id="export-csv-button"
@@ -500,7 +510,8 @@ export const Guestbook: React.FC = () => {
                       </ul>
                     </li>
                     <li>Klik <b>Terapkan (Deploy)</b>, setujui izin jika diminta Google.</li>
-                    <li>Salin <b>URL Aplikasi Web</b> yang dihasilkan dan tempel di input webhook di atas!</li>
+                    <li>Salin URL aplikasi web yang berakhiran <b>/exec</b>, lalu tambahkan sebagai Environment Variable <b>GOOGLE_SHEETS_WEBHOOK_URL</b> di Vercel.</li>
+                    <li>Tambahkan Environment Variable <b>GOOGLE_SHEETS_TOKEN</b> dengan nilai yang sama seperti <b>WEBHOOK_TOKEN</b> pada kode di atas.</li>
                   </ol>
                 </div>
               </div>
