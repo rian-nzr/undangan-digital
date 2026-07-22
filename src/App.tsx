@@ -156,9 +156,15 @@ export default function App() {
                 transition={{ delay: 0.7, duration: 0.6 }}
               >
                 <span className="text-[9px] uppercase tracking-[0.25em] text-editorial-accent block mb-2">Kepada Yth. Bapak/Ibu/Saudara/i</span>
-                <span className="font-serif text-xl font-light text-editorial-charcoal block border-b border-editorial-charcoal/10 pb-3 mb-3">
-                  {guestName}
-                </span>
+                <input
+                  id="guest-name-input"
+                  type="text"
+                  value={guestName}
+                  onChange={(event) => setGuestName(event.target.value)}
+                  aria-label="Nama tamu undangan"
+                  placeholder="Masukkan nama tamu"
+                  className="font-serif text-xl font-light text-editorial-charcoal block w-full border-b border-editorial-charcoal/10 bg-transparent pb-3 mb-3 text-center outline-none placeholder:text-editorial-accent/50 focus:border-editorial-accent"
+                />
                 <p className="text-[9px] text-editorial-accent/80 tracking-wider">
                   *Tanpa Mengurangi Rasa Hormat, Kami Mengundang Anda Untuk Hadir.
                 </p>
@@ -436,7 +442,7 @@ export default function App() {
 
                 <div className="grid grid-cols-3 gap-2 border-b border-editorial-charcoal/10 pb-3.5 text-left">
                   <span className="font-medium uppercase tracking-[0.2em] text-[10px] text-editorial-accent">PUKUL</span>
-                  <span className="col-span-2 font-serif text-sm text-editorial-charcoal">: 10.00 am - Selesai</span>
+                  <span className="col-span-2 font-serif text-sm text-editorial-charcoal">: 10.00 WIB - Selesai</span>
                 </div>
 
                 <div className="grid grid-cols-3 gap-2 pb-1 text-left">
@@ -457,7 +463,7 @@ export default function App() {
                 <div className="text-left pl-4 md:pl-8">
                   <span className="font-medium uppercase tracking-[0.15em] text-[10px] text-editorial-accent block mb-2">Turut Mengundang</span>
                   <p className="font-serif font-medium text-editorial-charcoal text-sm">Seluruh Keluarga Besar</p>
-                  <p className="font-serif text-editorial-accent text-xs">Gayo Zenith & Bireuen</p>
+              
                 </div>
               </div>
 
@@ -500,7 +506,6 @@ export default function App() {
                 Gunakan peta interaktif di bawah ini untuk melihat detail lokasi atau membuka navigasi arah langsung ke lokasi resepsi di Desa Lingka Kuta.
               </p>
             </motion.div>
-
             {/* Embedded Interactive Google Map */}
             <motion.div
               id="google-maps-frame-container"

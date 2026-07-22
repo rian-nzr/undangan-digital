@@ -229,11 +229,11 @@ export const Guestbook: React.FC = () => {
         <div className="bg-white border border-editorial-charcoal/10 p-6 relative">
           <form id="guestbook-rsvp-form" onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="guest-name-input" className="block text-xs font-semibold text-editorial-charcoal uppercase tracking-[0.15em] mb-2">
+              <label htmlFor="guestbook-name-input" className="block text-xs font-semibold text-editorial-charcoal uppercase tracking-[0.15em] mb-2">
                 Nama Lengkap
               </label>
               <input
-                id="guest-name-input"
+                id="guestbook-name-input"
                 type="text"
                 placeholder="Masukkan nama lengkap Anda..."
                 value={name}
