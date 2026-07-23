@@ -128,7 +128,7 @@ export default function App() {
             
             {/* Scattered coffee beans (delicate outline sketches) */}
             <div className="absolute top-1/4 right-16 opacity-15">
-              <CoffeeBean size={26} rotate={15} />aaa
+              <CoffeeBean size={26} rotate={15} />
             </div>
             <div className="absolute bottom-1/4 left-16 opacity-15">
               <CoffeeBean size={30} rotate={110} />
