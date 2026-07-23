@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { MessageSquare, Users, Check, X, HelpCircle, Settings, Download, Trash2, ArrowRight, ExternalLink, Copy } from "lucide-react";
 import { GuestbookEntry } from "../types";
 
-export const Guestbook: React.FC = () => {
+interface GuestbookProps {
+  adminMode?: boolean;
+}
+
+export const Guestbook: React.FC<GuestbookProps> = ({ adminMode = false }) => {
   const [entries, setEntries] = useState<GuestbookEntry[]>([]);
   const [name, setName] = useState("");
   const [status, setStatus] = useState<"Hadir" | "Tidak Hadir" | "Ragu">("Hadir");
@@ -20,6 +24,8 @@ export const Guestbook: React.FC = () => {
   const [adminError, setAdminError] = useState("");
   const [adminSuccess, setAdminSuccess] = useState("");
   const [copiedScript, setCopiedScript] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   // Stats
   const stats = {
@@ -28,6 +34,13 @@ export const Guestbook: React.FC = () => {
     tidakHadir: entries.filter(e => e.status === "Tidak Hadir").length,
     ragu: entries.filter(e => e.status === "Ragu").length,
   };
+
+  // Pagination logic
+  const pageCount = Math.ceil(entries.length / itemsPerPage);
+  const paginatedEntries = entries.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const fetchEntries = async () => {
     try {
@@ -46,7 +59,10 @@ export const Guestbook: React.FC = () => {
   // Load once on page open. New entries are added to state immediately after submission.
   useEffect(() => {
     fetchEntries();
-  }, []);
+    if (adminMode) {
+      setShowAdmin(true);
+    }
+  }, [adminMode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -318,7 +334,7 @@ function doGet(e) {
             </div>
           ) : (
             <div id="guestbook-scroll-box" className="space-y-4 max-h-[420px] overflow-y-auto pr-1">
-              {entries.map((entry) => (
+              {paginatedEntries.map((entry) => (
                 <div
                   key={entry.id}
                   id={`guestbook-entry-${entry.id}`}
@@ -360,19 +376,44 @@ function doGet(e) {
               ))}
             </div>
           )}
+          
+          {/* Pagination Controls */}
+          {pageCount > 1 && (
+            <div className="flex justify-between items-center mt-4 pt-4 border-t border-editorial-charcoal/10">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="text-xs font-semibold uppercase tracking-wider px-4 py-2 bg-white border border-editorial-charcoal/10 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Sebelumnya
+              </button>
+              <span className="text-xs text-editorial-accent">
+                Halaman {currentPage} dari {pageCount}
+              </span>
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, pageCount))}
+                disabled={currentPage === pageCount}
+                className="text-xs font-semibold uppercase tracking-wider px-4 py-2 bg-white border border-editorial-charcoal/10 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Berikutnya
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Floating Admin Settings Trigger */}
-        <div className="flex justify-center pt-2">
-          <button
-            id="admin-panel-toggle"
-            onClick={() => setShowAdmin(!showAdmin)}
-            className="text-[10px] uppercase tracking-[0.15em] font-semibold text-editorial-accent hover:text-editorial-charcoal flex items-center gap-1 cursor-pointer transition-colors"
-          >
-            <Settings className="w-3.5 h-3.5" />
-            {showAdmin ? "Tutup Pengaturan Backend" : "Pengaturan Google Sheets (Developer)"}
-          </button>
-        </div>
+        {adminMode && (
+          <div className="flex justify-center pt-2">
+            <button
+              id="admin-panel-toggle"
+              onClick={() => setShowAdmin(!showAdmin)}
+              className="text-[10px] uppercase tracking-[0.15em] font-semibold text-editorial-accent hover:text-editorial-charcoal flex items-center gap-1 cursor-pointer transition-colors"
+            >
+              <Settings className="w-3.5 h-3.5" />
+              {showAdmin ? "Tutup Pengaturan Backend" : "Pengaturan Google Sheets (Developer)"}
+            </button>
+          </div>
+        )}
 
         {/* Admin Settings Panel Block */}
         {showAdmin && (

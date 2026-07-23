@@ -19,12 +19,14 @@ import { Countdown } from "./components/Countdown";
 import { AudioPlayer } from "./components/AudioPlayer";
 import { Guestbook } from "./components/Guestbook";
 import { Gallery } from "./components/Gallery";
+import { GeneratorPesan } from "./components/GeneratorPesan";
 
 export default function App() {
   // Page states
   const [isCoverOpen, setIsCoverOpen] = useState(false);
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [guestName, setGuestName] = useState("Tamu Undangan");
+  const [currentPage, setCurrentPage] = useState("invitation");
   const invitationAudioRef = useRef<HTMLAudioElement | null>(null);
   
   // Clipboard copy feedback states
@@ -37,6 +39,15 @@ export default function App() {
     const to = params.get("to") || params.get("recipient") || params.get("kepada");
     if (to) {
       setGuestName(to.replace(/\+/g, " "));
+    }
+
+    const page = params.get("page");
+    if (page === "generator") {
+      setCurrentPage("generator");
+      setIsCoverOpen(true); // Langsung buka halaman, lewati cover
+    } else if (page === "admin") {
+      setCurrentPage("admin");
+      setIsCoverOpen(true); // Langsung buka halaman, lewati cover
     }
   }, []);
 
@@ -67,6 +78,14 @@ export default function App() {
 
   // Google Calendar integration url
   const gCalUrl = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Resepsi+Pernikahan+Afrizal+%26+Maida+Ulfa+(Tung+Dara+Baro)&dates=20260905T030000Z/20260905T100000Z&details=Dengan+memohon+ridha+Allah+SWT%2C+kami+bermaksud+menyelenggarakan+resepsi+pernikahan+anak+kami+Insya+Allah+akan+kami+laksanakan+pada+Sabtu%2C+5+September+2026.&location=Desa+lingka+kuta%2C+Kec.+gandapura%2C+Kab%2C+Bireuen%2C+Aceh";
+
+  if (currentPage === "generator") {
+    return <GeneratorPesan />;
+  }
+
+  if (currentPage === "admin") {
+    return <Guestbook adminMode={true} />;
+  }
 
   return (
     <div id="digital-invitation-root" className="min-h-screen bg-editorial-ivory flex flex-col items-center select-none text-editorial-charcoal overflow-x-hidden antialiased">
